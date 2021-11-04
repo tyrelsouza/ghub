@@ -1,0 +1,6 @@
+httpx
+pip-tools
+black
+invoke
+pytest
+pytest-httpx
