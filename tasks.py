@@ -1,8 +1,16 @@
 from invoke import task
+from cli import main
+
+
+@task
+def run(c):
+    main()
+
 
 @task
 def test(c):
-    c.run("pytest tests.py --pdb")
+    c.run("pytest *_tests.py")
+
 
 @task
 def black(c):
