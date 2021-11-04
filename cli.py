@@ -34,7 +34,7 @@ class GHub:
 
 
 def main():
-    gh = GHub(user_name="mkb79", repo_name="audible-cli")
+    gh = GHub(user_name="tyrelsouza", repo_name="work_sample")
     # pprint(gh.schema())
     pprint(
         (
