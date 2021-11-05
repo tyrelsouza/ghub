@@ -11,6 +11,11 @@ def run(c):
 def test(c):
     c.run("pytest --cov=. *_tests.py")
 
+@task(pre=[test])
+def coverage(c):
+    c.run("coverage html")
+    c.run("xdg-open coverage_html_report/index.html")
+
 
 @task
 def black(c):

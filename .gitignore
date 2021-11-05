@@ -2,3 +2,4 @@ env/
 Session.vim
 Session.nvim
 __pycache__/
+.coverage
