@@ -10,9 +10,8 @@ def main():
     user_name = Prompt.ask("Username?")
     gh = GHub()
     try:
-        success = gh.load_user(user_name=user_name)
-        if success:
-            print(gh.repos_table())
+        gh.load_user(user_name=user_name)
+        print(gh.repos_table())
     except httpx.HTTPStatusError as e:
         print(e)
 
