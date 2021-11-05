@@ -14,6 +14,19 @@ class API:
         with httpx.Client(headers=self.headers) as client:
             return client.get(url).json()
 
+    def _get_paged(self, url: str) -> list:
+        """Uses httpx.Client().get to send the appropriate github headers, and return the url"""
+        content = []
+        with httpx.Client(headers=self.headers) as client:
+            while True:
+                resp = client.get(url)
+                content.extend(resp.json())
+                if not resp.links.get('next'):
+                    break
+                url = resp.links['next']['url']
+        return content
+
+
     def load_user(self, user_name: str) -> dict:
         """Sets the user object"""
         return self._get(f"https://api.github.com/users/{user_name}")
@@ -24,4 +37,4 @@ class API:
 
     def load_repos(self) -> dict:
         """Set the users repos"""
-        return self._get(f"https://api.github.com/users/{self.user_name}/repos")
+        return self._get_paged(f"https://api.github.com/users/{self.user_name}/repos")
