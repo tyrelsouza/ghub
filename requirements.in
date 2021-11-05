@@ -4,4 +4,5 @@ black
 invoke
 pytest
 pytest-httpx
+pytest-cov
 rich

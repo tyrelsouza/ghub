@@ -9,7 +9,7 @@ def run(c):
 
 @task
 def test(c):
-    c.run("pytest *_tests.py")
+    c.run("pytest --cov=. *_tests.py")
 
 
 @task

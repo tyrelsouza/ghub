@@ -3,26 +3,35 @@ import pytest
 from api import API
 from pytest_httpx import HTTPXMock
 
+LINK1 = '<https://api.github.com/user/6292/repos?page=2>; rel="next", <https://api.github.com/user/6292/repos?page=2>; rel="last"'
+LINK2 = '<https://api.github.com/user/6292/repos?page=1>; rel="prev", <https://api.github.com/user/6292/repos?page=2>; rel="last"'
 
-def _load_user():
-    with open("./tests/fixtures/user.json", "r") as f:
+
+def _load_fixture(name: str):
+    with open(f"./tests/fixtures/{name}.json", "r") as f:
         return json.loads(f.read())
 
 
-def _load_repos():
-    with open("./tests/fixtures/repos.json", "r") as f:
-        return json.loads(f.read())
+def test_get(httpx_mock: HTTPXMock):
+    httpx_mock.add_response(method="GET", json=_load_fixture("user"))
+    api = API()
+    assert api.get("users")["login"] == "tyrelsouza"
 
 
-def test_load_user(httpx_mock: HTTPXMock):
-    httpx_mock.add_response(method="GET", json=_load_user())
+def test_get_with_pagination(httpx_mock: HTTPXMock):
+    api = API()
+    # link, so multiple pages
+    httpx_mock.add_response(
+        method="GET", json=_load_fixture("repos_1"), headers={"link": LINK1}
+    )
+    httpx_mock.add_response(
+        method="GET", json=_load_fixture("repos_2"), headers={"link": LINK2}
+    )
 
-    gh = API(user_name="tyrelsouza")
-    assert gh.user["login"] == "tyrelsouza"
+    repos = api.get_with_pagination("repos")
+    assert len(repos) == 2
 
-def test_load_repos(httpx_mock: HTTPXMock):
-    httpx_mock.add_response(method="GET", json=_load_user())
-    httpx_mock.add_response(method="GET", json=_load_repos())
-
-    gh = API(user_name="tyrelsouza")
-    assert gh.repos[0]["git_url"] == "git://github.com/tyrelsouza/genealogy.git"
+    # No link, so no 2nd page, only one item
+    httpx_mock.add_response(method="GET", json=_load_fixture("repos_1"))
+    repos = api.get_with_pagination("repos")
+    assert len(repos) == 1
