@@ -10,9 +10,13 @@ def main():
         raise Exception("Please set GITHUB_TOKEN")
     user_name = Prompt.ask("Username?")
     gh = GHub()
-    success = gh.load_user(user_name=user_name)
-    if success:
-        print(gh.repos_table())
+    try:
+        success = gh.load_user(user_name=user_name)
+        if success:
+            print(gh.repos_table())
+    except httpx.HTTPStatusError as e:
+        print(e)
+
 
 
 if __name__ == "__main__":

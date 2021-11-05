@@ -1,2 +1,7 @@
 [html]
 directory = coverage_html_report
+
+[report]
+show_missing = True
+omit =
+    tasks*

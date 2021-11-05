@@ -1,5 +1,7 @@
 import json
 import pytest
+import httpx
+
 from api import API
 from pytest_httpx import HTTPXMock
 
@@ -10,6 +12,11 @@ LINK2 = '<https://api.github.com/user/6292/repos?page=1>; rel="prev", <https://a
 def _load_fixture(name: str):
     with open(f"./tests/fixtures/{name}.json", "r") as f:
         return json.loads(f.read())
+
+def test_except(httpx_mock: HTTPXMock):
+    httpx_mock.add_response(method="GET", status_code=403)
+    with pytest.raises(httpx.HTTPStatusError):
+        API().get("boooger")
 
 
 def test_get(httpx_mock: HTTPXMock):
@@ -35,3 +42,8 @@ def test_get_with_pagination(httpx_mock: HTTPXMock):
     httpx_mock.add_response(method="GET", json=_load_fixture("repos_1"))
     repos = api.get_with_pagination("repos")
     assert len(repos) == 1
+
+    # test exit on dict
+    httpx_mock.add_response(method="GET", json=_load_fixture("user"))
+    user = api.get_with_pagination("user")
+    assert user['login'] == 'tyrelsouza'

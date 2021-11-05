@@ -9,18 +9,13 @@ class GHub:
     user = None
     repos = None
 
-    def load_user(self, user_name: str) -> bool:
+    def load_user(self, user_name: str)-> None:
         self.user_name = user_name
         self.api = API()
-        try:
-            self.user = self.api.get(f"/users/{user_name}")
-            self.repos = self.api.get_with_pagination(
-                f"https://api.github.com/users/{user_name}/repos"
-            )
-            return True
-        except httpx.HTTPStatusError as e:
-            print(e)
-            return False
+        self.user = self.api.get(f"/users/{user_name}")
+        self.repos = self.api.get_with_pagination(
+            f"https://api.github.com/users/{user_name}/repos"
+        )
 
     def repos_trimmed(self) -> list:
         for repo in self.repos:
