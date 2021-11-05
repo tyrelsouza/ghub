@@ -7,8 +7,9 @@ import httpx
 def main():
     user_name = Prompt.ask("Username?")
     gh = GHub()
-    gh.load_user(user_name=user_name)
-    print(gh.repos_table())
+    success = gh.load_user(user_name=user_name)
+    if success:
+        print(gh.repos_table())
 
 
 

@@ -2,6 +2,7 @@ from rich.table import Table
 from rich.prompt import Prompt
 from rich import print
 from api import API
+import httpx
 
 
 class GHub:
@@ -10,9 +11,12 @@ class GHub:
 
     def load_user(self, user_name: str) -> None:
         self.user_name = user_name
-        self.api = API(self.user_name)
-        self.user = self.api.user
-        self.repos = self.api.repos
+        self.api = API()
+        try:
+            self.user = self.api.get(f"https://api.github.com/users/{user_name}")
+            self.repos = self.api.get(f"https://api.github.com/users/{user_name}/repos")
+        except httpx.HTTPStatusError as e:
+            print(e)
 
     def repos_trimmed(self) -> list:
         for repo in self.repos:
