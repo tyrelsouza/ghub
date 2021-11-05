@@ -9,7 +9,7 @@ class GHub:
     user = None
     repos = None
 
-    def load_user(self, user_name: str)-> None:
+    def load_user(self, user_name: str) -> None:
         self.user_name = user_name
         self.api = API()
         self.user = self.api.get(f"/users/{user_name}")

@@ -13,6 +13,7 @@ def _load_fixture(name: str):
     with open(f"./tests/fixtures/{name}.json", "r") as f:
         return json.loads(f.read())
 
+
 def test_except(httpx_mock: HTTPXMock):
     httpx_mock.add_response(method="GET", status_code=403)
     with pytest.raises(httpx.HTTPStatusError):
@@ -46,4 +47,4 @@ def test_get_with_pagination(httpx_mock: HTTPXMock):
     # test exit on dict
     httpx_mock.add_response(method="GET", json=_load_fixture("user"))
     user = api.get_with_pagination("user")
-    assert user['login'] == 'tyrelsouza'
+    assert user["login"] == "tyrelsouza"

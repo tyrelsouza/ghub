@@ -11,6 +11,7 @@ def run(c):
 def test(c):
     c.run("pytest --cov=. *_tests.py")
 
+
 @task(pre=[test])
 def coverage(c):
     c.run("coverage html")
