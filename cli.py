@@ -4,7 +4,6 @@ from rich import print
 import httpx
 import os
 
-
 def main():
     if not os.environ.get("GITHUB_TOKEN"):
         raise Exception("Please set GITHUB_TOKEN")
@@ -16,8 +15,6 @@ def main():
             print(gh.repos_table())
     except httpx.HTTPStatusError as e:
         print(e)
-
-
 
 if __name__ == "__main__":
     main()

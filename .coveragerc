@@ -5,3 +5,4 @@ directory = coverage_html_report
 show_missing = True
 omit =
     tasks*
+    cli.py
